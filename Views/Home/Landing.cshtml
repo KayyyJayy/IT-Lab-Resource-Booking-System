@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Welcome";
+    Layout = "_Layout";
+}
+
+<!-- Hero section -->
+<div class="landing-hero text-center">
+    <div class="container">
+        <i class="bi bi-pc-display-horizontal display-1 mb-3 opacity-75"></i>
+        <h1 class="display-5 fw-bold mb-3">IT Lab & Resource Booking</h1>
+        <p class="lead mb-4 opacity-90">
+            Book computer labs, individual workstations, and AV equipment for your teaching, learning, and research needs.
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg px-4 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-person-plus me-2"></i>Register
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Feature cards -->
+<div class="container py-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 border h-100">
+                <i class="bi bi-calendar-check fs-1 text-primary mb-3"></i>
+                <h5 class="fw-semibold">Easy Booking</h5>
+                <p class="text-muted small">Browse available labs and equipment, pick your time slot, and submit a booking in seconds.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 border h-100">
+                <i class="bi bi-shield-check fs-1 text-success mb-3"></i>
+                <h5 class="fw-semibold">Approval Workflow</h5>
+                <p class="text-muted small">Bookings are reviewed and approved by IT administrators to ensure fair access for everyone.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 border h-100">
+                <i class="bi bi-bar-chart-line fs-1 text-warning mb-3"></i>
+                <h5 class="fw-semibold">Usage Reports</h5>
+                <p class="text-muted small">IT staff can view booking history, resource utilisation, and generate management reports.</p>
+            </div>
+        </div>
+    </div>
+</div>

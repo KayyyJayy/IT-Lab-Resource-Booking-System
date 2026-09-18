@@ -1,0 +1,51 @@
+@model Resource
+@{
+    ViewData["Title"] = "Add Resource";
+}
+
+<div class="my-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="form-card">
+                <h5 class="fw-semibold mb-4"><i class="bi bi-plus-circle me-2 text-primary"></i>Add New Resource</h5>
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small" style="display:none"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Lab A – Windows Suite" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Type" class="form-label fw-semibold"></label>
+                        <select asp-for="Type" asp-items="Html.GetEnumSelectList<ResourceType>()" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label fw-semibold"></label>
+                        <input asp-for="Location" class="form-control" placeholder="e.g. Block 1, Room 101" />
+                        <span asp-validation-for="Location" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label fw-semibold"></label>
+                        <input asp-for="Capacity" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" rows="3" class="form-control" placeholder="Describe available software, hardware specs, etc."></textarea>
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input asp-for="IsAvailable" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsAvailable" class="form-check-label">Available for booking</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-check-circle me-2"></i>Create Resource</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

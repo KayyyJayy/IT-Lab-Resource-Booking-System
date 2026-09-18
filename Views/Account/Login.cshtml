@@ -1,0 +1,62 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "_Layout";
+}
+
+<div class="min-vh-100 d-flex align-items-center" style="background:#f5f7fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-pc-display-horizontal display-4 text-primary"></i>
+                    <h4 class="fw-semibold mt-2">IT Lab & Resource Booking</h4>
+                    <p class="text-muted small">University IT Services</p>
+                </div>
+                <div class="form-card">
+                    <h5 class="fw-semibold mb-4">Sign In</h5>
+                    <form asp-action="Login" method="post">
+                        <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" class="form-control" placeholder="you@university.ac" autofocus />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold"></label>
+                            <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label small">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                        </button>
+                        <p class="text-center small text-muted mb-0">
+                            Don't have an account? <a asp-action="Register">Register here</a>
+                        </p>
+                    </form>
+                </div>
+
+                @* <!-- Demo credentials hint -->
+                <div class="bg-white rounded-4 border p-3 mt-3">
+                    <p class="small fw-semibold mb-2 text-muted">Demo Accounts</p>
+                    <div class="row small">
+                        <div class="col-4"><span class="badge bg-danger">Admin</span><br /><span class="text-muted">admin@university.ac</span><br /><span class="text-muted">Admin@123</span></div>
+                        <div class="col-4"><span class="badge bg-primary">Staff</span><br /><span class="text-muted">staff@university.ac</span><br /><span class="text-muted">Staff@123</span></div>
+                        <div class="col-4"><span class="badge bg-secondary">Student</span><br /><span class="text-muted">student@university.ac</span><br /><span class="text-muted">Student@123</span></div>
+                    </div>
+                </div> *@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

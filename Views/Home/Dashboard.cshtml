@@ -1,0 +1,159 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div>
+        <h4 class="fw-semibold mb-0">Dashboard</h4>
+        <p class="text-muted small mb-0">Welcome back, @User.Identity!.Name</p>
+    </div>
+    <a asp-controller="Bookings" asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-calendar-plus me-2"></i>New Booking
+    </a>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-primary">@Model.TotalResources</div>
+                <div class="stat-label">Resources</div>
+            </div>
+            <i class="bi bi-hdd-stack stat-icon text-primary"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-success">@Model.TotalBookings</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <i class="bi bi-calendar-check stat-icon text-success"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-warning">@Model.PendingApprovals</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <i class="bi bi-hourglass-split stat-icon text-warning"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-info">@Model.TodayBookings</div>
+                <div class="stat-label">Today's Bookings</div>
+            </div>
+            <i class="bi bi-calendar-day stat-icon text-info"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Calendar -->
+    <div class="col-lg-8">
+        <div class="bg-white rounded-4 border p-3">
+            <h6 class="fw-semibold mb-3"><i class="bi bi-calendar3 me-2 text-primary"></i>Booking Calendar</h6>
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- My upcoming bookings -->
+    <div class="col-lg-4">
+        <div class="bg-white rounded-4 border p-3 h-100">
+            <h6 class="fw-semibold mb-3"><i class="bi bi-clock me-2 text-primary"></i>My Upcoming Bookings</h6>
+            @if (!Model.MyUpcomingBookings.Any())
+            {
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-calendar-x fs-2 mb-2 d-block"></i>
+                    <small>No upcoming bookings.</small><br />
+                    <a asp-controller="Bookings" asp-action="Create" class="btn btn-sm btn-outline-primary mt-2">Make a Booking</a>
+                </div>
+            }
+            else
+            {
+                @foreach (var booking in Model.MyUpcomingBookings)
+                {
+                    <div class="border rounded-3 p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold small">@booking.Resource.Name</div>
+                                <div class="text-muted" style="font-size:0.78rem;">
+                                    @booking.StartTime.ToString("ddd dd MMM, HH:mm") – @booking.EndTime.ToString("HH:mm")
+                                </div>
+                            </div>
+                            <span class="badge badge-@booking.Status.ToString() rounded-pill">@booking.Status</span>
+                        </div>
+                    </div>
+                }
+                <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-sm btn-outline-secondary w-100 mt-1">View all</a>
+            }
+        </div>
+    </div>
+</div>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+{
+    <!-- Recent bookings table -->
+    <div class="bg-white rounded-4 border p-3 mt-4">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Recent Bookings</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th><th>User</th><th>Resource</th><th>Date & Time</th><th>Status</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in Model.RecentBookings)
+                    {
+                        <tr>
+                            <td class="text-muted small">@b.Id</td>
+                            <td>@b.User.FullName</td>
+                            <td>@b.Resource.Name</td>
+                            <td class="small">@b.StartTime.ToString("dd MMM HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                            <td><span class="badge badge-@b.Status.ToString()">@b.Status</span></td>
+                            <td><a asp-controller="Bookings" asp-action="Details" asp-route-id="@b.Id" class="btn btn-xs btn-outline-secondary btn-sm">View</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" />
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                height: 520,
+                slotMinTime: '07:00:00',
+                slotMaxTime: '21:00:00',
+                events: @Html.Raw(Model.CalendarEventsJson),
+                eventClick: function(info) {
+                    if (info.event.url) {
+                        info.jsEvent.preventDefault();
+                        window.location.href = info.event.url;
+                    }
+                }
+            });
+            calendar.render();
+        });
+    </script>
+}

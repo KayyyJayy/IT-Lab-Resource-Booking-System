@@ -1,0 +1,101 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <h4 class="fw-semibold mb-0">My Bookings</h4>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-calendar-plus me-2"></i>New Booking</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="bg-white rounded-4 border text-center p-5">
+        <i class="bi bi-calendar-x fs-1 text-muted mb-3 d-block"></i>
+        <h5 class="text-muted">No bookings yet</h5>
+        <p class="text-muted small">Browse the available resources and make your first booking.</p>
+        <a asp-controller="Resources" asp-action="Index" class="btn btn-primary">Browse Resources</a>
+    </div>
+}
+else
+{
+    <!-- Active bookings -->
+    var active = Model.Where(b => b.StartTime >= DateTime.Now &&
+            b.Status is BookingStatus.Approved or BookingStatus.Pending).OrderBy(b => b.StartTime).ToList();
+    var past = Model.Where(b => b.StartTime < DateTime.Now ||
+        b.Status is BookingStatus.Cancelled or BookingStatus.Rejected or BookingStatus.Completed)
+        .OrderByDescending(b => b.StartTime).ToList();
+
+    @if (active.Any())
+    {
+        <h6 class="fw-semibold text-muted mb-3">Upcoming & Pending</h6>
+        <div class="row g-3 mb-4">
+            @foreach (var b in active)
+            {
+                <div class="col-md-6">
+                    <div class="bg-white rounded-4 border p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-semibold mb-0">@b.Resource.Name</h6>
+                            <span class="badge badge-@b.Status.ToString()">@b.Status</span>
+                        </div>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-calendar3 me-1"></i>@b.StartTime.ToString("dddd dd MMM yyyy")
+                        </p>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-clock me-1"></i>@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")
+                            <span class="ms-2 text-secondary">(@Math.Round(b.Duration.TotalHours, 1)h)</span>
+                        </p>
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-chat-left-text me-1"></i>@b.Purpose
+                        </p>
+                        @if (b.AdminNotes != null)
+                        {
+                            <div class="alert alert-info py-1 px-2 small mb-2">
+                                <i class="bi bi-info-circle me-1"></i><strong>Admin note:</strong> @b.AdminNotes
+                            </div>
+                        }
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-primary flex-grow-1">Details</a>
+                            @if (b.CanBeCancelled)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@b.Id" method="post"
+                                      onsubmit="return confirm('Cancel this booking?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (past.Any())
+    {
+        <h6 class="fw-semibold text-muted mb-3">History</h6>
+        <div class="bg-white rounded-4 border">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th><th>Resource</th><th>Date</th><th>Time</th><th>Status</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in past)
+                        {
+                            <tr>
+                                <td class="text-muted small align-middle">@b.Id</td>
+                                <td class="align-middle">@b.Resource.Name</td>
+                                <td class="small align-middle">@b.StartTime.ToString("dd MMM yyyy")</td>
+                                <td class="small align-middle">@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                                <td class="align-middle"><span class="badge badge-@b.Status.ToString()">@b.Status</span></td>
+                                <td class="align-middle"><a asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary">View</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

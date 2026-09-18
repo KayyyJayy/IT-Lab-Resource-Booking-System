@@ -1,0 +1,67 @@
+@model Booking
+@{
+    ViewData["Title"] = $"Booking #{Model.Id}";
+}
+
+<div class="my-4">
+    <a asp-action="MyBookings" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left me-1"></i>Back</a>
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="form-card">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h5 class="fw-semibold mb-1">Booking #@Model.Id</h5>
+                        <small class="text-muted">Submitted @Model.CreatedAt.ToString("dd MMM yyyy, HH:mm")</small>
+                    </div>
+                    <span class="badge badge-@Model.Status.ToString() fs-6 px-3 py-2">@Model.Status</span>
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4 text-muted">Resource</dt>
+                    <dd class="col-sm-8 fw-semibold">@Model.Resource.Name</dd>
+
+                    <dt class="col-sm-4 text-muted">Location</dt>
+                    <dd class="col-sm-8">@Model.Resource.Location</dd>
+
+                    <dt class="col-sm-4 text-muted">Date</dt>
+                    <dd class="col-sm-8">@Model.StartTime.ToString("dddd, dd MMMM yyyy")</dd>
+
+                    <dt class="col-sm-4 text-muted">Time</dt>
+                    <dd class="col-sm-8">@Model.StartTime.ToString("HH:mm") – @Model.EndTime.ToString("HH:mm") (@Math.Round(Model.Duration.TotalHours, 1) hours)</dd>
+
+                    <dt class="col-sm-4 text-muted">Attendees</dt>
+                    <dd class="col-sm-8">@Model.NumberOfAttendees</dd>
+
+                    <dt class="col-sm-4 text-muted">Purpose</dt>
+                    <dd class="col-sm-8">@Model.Purpose</dd>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                    {
+                        <dt class="col-sm-4 text-muted">Requested By</dt>
+                        <dd class="col-sm-8">@Model.User.FullName (@Model.User.Department)</dd>
+                    }
+
+                    @if (Model.AdminNotes != null)
+                    {
+                        <dt class="col-sm-4 text-muted">Admin Notes</dt>
+                        <dd class="col-sm-8">
+                            <div class="alert alert-info py-2 mb-0 small">@Model.AdminNotes</div>
+                        </dd>
+                    }
+                </dl>
+
+                @if (Model.CanBeCancelled)
+                {
+                    <hr />
+                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post"
+                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Booking
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

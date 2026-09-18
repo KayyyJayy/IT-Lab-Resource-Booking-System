@@ -1,0 +1,81 @@
+/* ── IT Lab & Resource Booking System – Site Styles ── */
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Navbar */
+.navbar-brand { letter-spacing: 0.3px; }
+
+/* Stat cards on dashboard */
+.stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e8ecf0;
+    transition: box-shadow 0.15s ease;
+}
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+}
+.stat-card .stat-label {
+    font-size: 0.82rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.stat-card .stat-icon {
+    font-size: 2rem;
+    opacity: 0.18;
+}
+
+/* Resource cards */
+.resource-card {
+    background: #fff;
+    border: 1px solid #e8ecf0;
+    border-radius: 12px;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    height: 100%;
+}
+.resource-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+    transform: translateY(-2px);
+}
+.resource-type-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* Status badges */
+.badge-Pending    { background-color: #fff3cd; color: #856404; }
+.badge-Approved   { background-color: #d1e7dd; color: #0a3622; }
+.badge-Rejected   { background-color: #f8d7da; color: #58151c; }
+.badge-Cancelled  { background-color: #e2e3e5; color: #41464b; }
+.badge-Completed  { background-color: #cff4fc; color: #055160; }
+
+/* Calendar container */
+#calendar { background: #fff; border-radius: 12px; padding: 1rem; border: 1px solid #e8ecf0; }
+
+/* Form card */
+.form-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8ecf0;
+    padding: 2rem;
+}
+
+/* Table tweaks */
+.table-hover tbody tr:hover { background-color: #f0f4ff; }
+
+/* Landing page */
+.landing-hero {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: #fff;
+    padding: 5rem 0;
+}

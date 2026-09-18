@@ -1,0 +1,78 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "Booking Approvals";
+}
+
+<div class="my-4">
+    <h4 class="fw-semibold mb-1">Booking Approvals</h4>
+    <p class="text-muted small mb-4">Review and act on pending booking requests.</p>
+
+    @if (!Model.Any())
+    {
+        <div class="bg-white rounded-4 border text-center p-5">
+            <i class="bi bi-check2-all fs-1 text-success mb-3 d-block"></i>
+            <h5 class="text-muted">All caught up!</h5>
+            <p class="text-muted small">There are no pending booking requests to review.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var b in Model)
+            {
+                <div class="col-md-6">
+                    <div class="bg-white rounded-4 border p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-semibold mb-0">@b.Resource.Name</h6>
+                                <small class="text-muted">@b.Resource.Location</small>
+                            </div>
+                            <span class="badge badge-Pending">Pending</span>
+                        </div>
+
+                        <dl class="row small text-muted mb-3">
+                            <dt class="col-5">Requested by</dt>
+                            <dd class="col-7 fw-semibold text-dark">@b.User.FullName</dd>
+                            <dt class="col-5">Department</dt>
+                            <dd class="col-7">@b.User.Department</dd>
+                            <dt class="col-5">Date</dt>
+                            <dd class="col-7">@b.StartTime.ToString("ddd dd MMM yyyy")</dd>
+                            <dt class="col-5">Time</dt>
+                            <dd class="col-7">@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</dd>
+                            <dt class="col-5">Attendees</dt>
+                            <dd class="col-7">@b.NumberOfAttendees / @b.Resource.Capacity</dd>
+                            <dt class="col-5">Purpose</dt>
+                            <dd class="col-7">@b.Purpose</dd>
+                            <dt class="col-5">Submitted</dt>
+                            <dd class="col-7">@b.CreatedAt.ToString("dd MMM yyyy, HH:mm")</dd>
+                        </dl>
+
+                        <!-- Approve form -->
+                        <form asp-action="Approve" method="post" class="mb-2">
+                            <input type="hidden" name="BookingId" value="@b.Id" />
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="AdminNotes" class="form-control" placeholder="Optional note for user…" />
+                                <button type="submit" class="btn btn-success"
+                                        onclick="return confirm('Approve booking #@b.Id?')">
+                                    <i class="bi bi-check-circle me-1"></i>Approve
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Reject form -->
+                        <form asp-action="Reject" method="post">
+                            <input type="hidden" name="BookingId" value="@b.Id" />
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="AdminNotes" class="form-control" placeholder="Reason for rejection…" />
+                                <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('Reject booking #@b.Id?')">
+                                    <i class="bi bi-x-circle me-1"></i>Reject
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,84 @@
+@model IEnumerable<Resource>
+@{
+    ViewData["Title"] = "Resources";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <h4 class="fw-semibold mb-0">IT Resources</h4>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Add Resource</a>
+    }
+</div>
+
+<!-- Filter bar -->
+<form method="get" class="row g-2 mb-4 bg-white p-3 rounded-4 border">
+    <div class="col-md-5">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by name or location…" />
+    </div>
+    <div class="col-md-4">
+        <select name="type" class="form-select">
+            <option value="">All Types</option>
+            @foreach (var t in Enum.GetValues<ResourceType>())
+            {
+                <option value="@t" selected="@(ViewBag.Type == t.ToString())">@t</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-grow-1"><i class="bi bi-search me-1"></i>Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-hdd-stack fs-1 mb-2 d-block"></i>
+        <p>No resources found.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var resource in Model)
+        {
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="resource-card p-3 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        @{
+                            var (icon, color) = resource.Type switch {
+                                ResourceType.ComputerLab => ("bi-display", "primary"),
+                                ResourceType.Workstation => ("bi-pc-display", "info"),
+                                ResourceType.Projector   => ("bi-projector", "warning"),
+                                _                        => ("bi-speaker", "secondary")
+                            };
+                        }
+                        <span class="resource-type-badge bg-@color bg-opacity-10 text-@color">
+                            <i class="bi @icon me-1"></i>@resource.Type
+                        </span>
+                        @if (!resource.IsAvailable)
+                        {
+                            <span class="badge bg-danger">Unavailable</span>
+                        }
+                    </div>
+                    <h6 class="fw-semibold mb-1">@resource.Name</h6>
+                    <p class="text-muted small mb-1"><i class="bi bi-geo-alt me-1"></i>@resource.Location</p>
+                    <p class="text-muted small mb-2"><i class="bi bi-people me-1"></i>Capacity: @resource.Capacity</p>
+                    <p class="text-muted small flex-grow-1">@resource.Description</p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a asp-action="Details" asp-route-id="@resource.Id" class="btn btn-sm btn-outline-primary flex-grow-1">View</a>
+                        @if (resource.IsAvailable)
+                        {
+                            <a asp-controller="Bookings" asp-action="Create" asp-route-resourceId="@resource.Id" class="btn btn-sm btn-primary flex-grow-1">Book</a>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@resource.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

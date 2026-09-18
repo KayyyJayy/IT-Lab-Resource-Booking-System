@@ -1,0 +1,65 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "All Bookings";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <h4 class="fw-semibold mb-0">All Bookings</h4>
+    <a asp-controller="Admin" asp-action="Approvals" class="btn btn-warning">
+        <i class="bi bi-check-circle me-2"></i>Pending Approvals
+    </a>
+</div>
+
+<!-- Filter bar -->
+<form method="get" class="row g-2 mb-4 bg-white p-3 rounded-4 border">
+    <div class="col-md-5">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by user, resource, or purpose…" />
+    </div>
+    <div class="col-md-4">
+        <select name="status" class="form-select">
+            <option value="">All Statuses</option>
+            @foreach (var s in Enum.GetValues<BookingStatus>())
+            {
+                <option value="@s" selected="@(ViewBag.Status == s.ToString())">@s</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-grow-1"><i class="bi bi-search me-1"></i>Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a>
+    </div>
+</form>
+
+<div class="bg-white rounded-4 border">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th><th>User</th><th>Resource</th><th>Date</th><th>Time</th><th>Attendees</th><th>Status</th><th>Submitted</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="9" class="text-center text-muted py-4">No bookings found.</td></tr>
+                }
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td class="text-muted small align-middle">@b.Id</td>
+                        <td class="align-middle"><span class="fw-semibold">@b.User.FullName</span><br /><small class="text-muted">@b.User.Department</small></td>
+                        <td class="align-middle">@b.Resource.Name</td>
+                        <td class="small align-middle">@b.StartTime.ToString("dd MMM yyyy")</td>
+                        <td class="small align-middle">@b.StartTime.ToString("HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                        <td class="align-middle text-center">@b.NumberOfAttendees</td>
+                        <td class="align-middle"><span class="badge badge-@b.Status.ToString()">@b.Status</span></td>
+                        <td class="small align-middle text-muted">@b.CreatedAt.ToString("dd MMM")</td>
+                        <td class="align-middle">
+                            <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

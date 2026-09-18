@@ -1,0 +1,77 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+}
+
+<div class="min-vh-100 d-flex align-items-center" style="background:#f5f7fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="text-center mb-4">
+                    <i class="bi bi-pc-display-horizontal display-4 text-primary"></i>
+                    <h4 class="fw-semibold mt-2">Create Account</h4>
+                </div>
+                <div class="form-card">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="FullName" class="form-label fw-semibold"></label>
+                                <input asp-for="FullName" class="form-control" placeholder="Jane Smith" />
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="StudentStaffId" class="form-label fw-semibold"></label>
+                                <input asp-for="StudentStaffId" class="form-control" placeholder="STU001" />
+                                <span asp-validation-for="StudentStaffId" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" class="form-control" placeholder="you@university.ac" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Department" class="form-label fw-semibold"></label>
+                                <input asp-for="Department" class="form-control" placeholder="Computer Science" />
+                                <span asp-validation-for="Department" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Role" class="form-label fw-semibold"></label>
+                                <select asp-for="Role" class="form-select">
+                                    <option value="Student">Student</option>
+                                    <option value="Staff">Staff</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Password" class="form-label fw-semibold"></label>
+                                <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-person-plus me-2"></i>Create Account
+                        </button>
+                        <p class="text-center small text-muted mb-0">
+                            Already have an account? <a asp-action="Login">Sign in</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

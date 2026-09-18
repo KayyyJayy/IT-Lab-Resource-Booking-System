@@ -1,0 +1,62 @@
+@model Resource
+@{
+    ViewData["Title"] = "Edit Resource";
+}
+
+<div class="my-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="form-card">
+                <h5 class="fw-semibold mb-4"><i class="bi bi-pencil me-2 text-warning"></i>Edit Resource</h5>
+                <form asp-action="Edit" method="post">
+                    <input asp-for="Id" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Type" class="form-label fw-semibold"></label>
+                        <select asp-for="Type" asp-items="Html.GetEnumSelectList<ResourceType>()" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label fw-semibold"></label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label fw-semibold"></label>
+                        <input asp-for="Capacity" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input asp-for="IsAvailable" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsAvailable" class="form-check-label">Available for booking</label>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning flex-grow-1"><i class="bi bi-save me-2"></i>Save Changes</button>
+                    </div>
+                </form>
+
+                <hr class="my-4" />
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post"
+                      onsubmit="return confirm('Delete this resource? All associated bookings will also be deleted.');">
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <i class="bi bi-trash me-2"></i>Delete Resource
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,44 @@
+@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "Users";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
+}
+
+<div class="my-4">
+    <h4 class="fw-semibold mb-1">User Management</h4>
+    <p class="text-muted small mb-4">All registered users and their roles.</p>
+
+    <div class="bg-white rounded-4 border">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Name</th><th>Email</th><th>ID / Staff No.</th><th>Department</th><th>Roles</th><th>Joined</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        var roles = userRoles != null && userRoles.ContainsKey(user.Id) ? userRoles[user.Id] : new List<string>();
+                        <tr>
+                            <td class="fw-semibold align-middle">@user.FullName</td>
+                            <td class="align-middle small">@user.Email</td>
+                            <td class="align-middle small text-muted">@user.StudentStaffId</td>
+                            <td class="align-middle small">@user.Department</td>
+                            <td class="align-middle">
+                                @foreach (var role in roles)
+                                {
+                                    var badgeClass = role switch {
+                                        "Admin"   => "bg-danger",
+                                        "Staff"   => "bg-primary",
+                                        _         => "bg-secondary"
+                                    };
+                                    <span class="badge @badgeClass me-1">@role</span>
+                                }
+                            </td>
+                            <td class="align-middle small text-muted">@user.CreatedAt.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

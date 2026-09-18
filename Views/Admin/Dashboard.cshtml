@@ -1,0 +1,120 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div>
+        <h4 class="fw-semibold mb-0">Admin Dashboard</h4>
+        <p class="text-muted small mb-0">Overview of all bookings and system resources</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Approvals" class="btn btn-warning">
+            <i class="bi bi-check-circle me-2"></i>
+            Approvals
+            @if (Model.PendingApprovals > 0) { <span class="badge bg-danger ms-1">@Model.PendingApprovals</span> }
+        </a>
+        <a asp-action="Reports" class="btn btn-outline-primary"><i class="bi bi-bar-chart me-2"></i>Reports</a>
+    </div>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-primary">@Model.TotalResources</div>
+                <div class="stat-label">Resources</div>
+            </div>
+            <i class="bi bi-hdd-stack stat-icon text-primary"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-success">@Model.TotalBookings</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <i class="bi bi-calendar-check stat-icon text-success"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-warning">@Model.PendingApprovals</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <i class="bi bi-hourglass-split stat-icon text-warning"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-number text-info">@Model.TodayBookings</div>
+                <div class="stat-label">Today's Bookings</div>
+            </div>
+            <i class="bi bi-calendar-day stat-icon text-info"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Quick links -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a asp-controller="Resources" asp-action="Create" class="text-decoration-none">
+            <div class="bg-white rounded-4 border p-3 text-center">
+                <i class="bi bi-plus-circle fs-3 text-primary mb-2 d-block"></i>
+                <div class="small fw-semibold">Add Resource</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-action="Approvals" class="text-decoration-none">
+            <div class="bg-white rounded-4 border p-3 text-center">
+                <i class="bi bi-check-circle fs-3 text-success mb-2 d-block"></i>
+                <div class="small fw-semibold">Review Bookings</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-action="Reports" class="text-decoration-none">
+            <div class="bg-white rounded-4 border p-3 text-center">
+                <i class="bi bi-bar-chart-line fs-3 text-warning mb-2 d-block"></i>
+                <div class="small fw-semibold">View Reports</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-action="Users" class="text-decoration-none">
+            <div class="bg-white rounded-4 border p-3 text-center">
+                <i class="bi bi-people fs-3 text-info mb-2 d-block"></i>
+                <div class="small fw-semibold">Manage Users</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Recent bookings -->
+<div class="bg-white rounded-4 border p-3">
+    <h6 class="fw-semibold mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Recent Bookings</h6>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+                <tr><th>#</th><th>User</th><th>Resource</th><th>Date & Time</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model.RecentBookings)
+                {
+                    <tr>
+                        <td class="text-muted small align-middle">@b.Id</td>
+                        <td class="align-middle">@b.User.FullName</td>
+                        <td class="align-middle">@b.Resource.Name</td>
+                        <td class="small align-middle">@b.StartTime.ToString("dd MMM HH:mm") – @b.EndTime.ToString("HH:mm")</td>
+                        <td class="align-middle"><span class="badge badge-@b.Status.ToString()">@b.Status</span></td>
+                        <td class="align-middle"><a asp-controller="Bookings" asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
