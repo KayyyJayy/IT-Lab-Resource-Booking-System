@@ -4,3 +4,6 @@ obj/
 *.user
 *.suo
 labbooking.db
+
+labbooking.db-shm
+labbooking.db-wal
